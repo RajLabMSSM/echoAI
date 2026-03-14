@@ -1,0 +1,186 @@
+---
+title: "Getting Started"
+author: '<h4>Authors: <i>`r auths <- eval(parse(text = gsub("person","c",read.dcf("../DESCRIPTION",
+  fields = "Authors@R"))));paste(auths[names(auths)=="given"],auths[names(auths)=="family"],
+  collapse = ", ")`</i></h4>'
+date: '<h4>Vignette updated: <i>`r format( Sys.Date(), "%b-%d-%Y")`</i></h4>'
+output:
+  BiocStyle::html_document
+vignette: >
+    %\VignetteIndexEntry{echoAI}
+    %\usepackage[utf8]{inputenc}
+    %\VignetteEngine{knitr::rmarkdown}
+---
+
+```{r setup, include=TRUE, message=FALSE}
+library(echoAI)
+```
+
+# Introduction
+
+`echoAI` provides API access to variant-level AI/ML predictions,
+currently centred on
+[IMPACT](https://github.com/immunogenomics/IMPACT)
+(Inference and Modeling of Phenotype-related ACtive Transcription).
+
+IMPACT predicts transcription factor (TF) binding at a motif site by
+learning the epigenomic profiles at those sites
+(primarily [ENCODE](https://www.encodeproject.org/)).
+The 707 annotations cover a wide range of immune and non-immune cell types,
+making IMPACT scores especially useful for prioritising causal variants
+in immune-mediated diseases.
+
+All IMPACT data are aligned to the **hg19** genome build.
+Tabix-indexed versions are hosted on Zenodo
+([doi:10.5281/zenodo.7062238](https://doi.org/10.5281/zenodo.7062238))
+for rapid remote querying.
+
+# Query IMPACT annotations
+
+The primary entry point is `IMPACT_query()`, which queries tabix-indexed
+IMPACT annotation and LD-score files hosted on Zenodo.
+This is the fastest way to annotate a small set of SNPs.
+
+```{r query-impact, eval=FALSE}
+## Prepare example query data
+query_dat <- echodata::BST1[1:50,]
+
+## Query IMPACT annotations (European population, wide format)
+annot_wide <- IMPACT_query(
+    query_dat = query_dat,
+    types = "annot",
+    populations = "EUR",
+    output_format = "wide"
+)
+head(annot_wide)
+```
+
+You can also retrieve results in long format, which is useful for
+downstream enrichment analysis. Setting `add_metadata = TRUE` appends
+tissue/cell/TF information to each row.
+
+```{r query-long, eval=FALSE}
+annot_long <- IMPACT_query(
+    query_dat = query_dat,
+    types = "annot",
+    populations = "EUR",
+    output_format = "long",
+    add_metadata = TRUE
+)
+head(annot_long)
+```
+
+# Annotation key
+
+The annotation key maps each of the 707 IMPACT annotation IDs to its
+source study, tissue, cell type/line, and transcription factor.
+
+```{r annotation-key, eval=FALSE}
+annot_key <- IMPACT_get_annotation_key(save_key = FALSE)
+head(annot_key)
+```
+
+# Download full annotation matrices
+
+For larger analyses (e.g. genome-wide or multi-locus), you can download
+the full per-chromosome annotation matrices directly from the IMPACT
+GitHub repository with `IMPACT_get_annotations()`.
+
+**Note:** These files are large. Make sure you have sufficient memory
+and storage.
+
+```{r get-annotations, eval=FALSE}
+## Get annotations for variants in the BST1 locus
+BST1 <- echodata::BST1
+annot_melt <- IMPACT_get_annotations(dat = BST1)
+head(annot_melt)
+```
+
+To iterate across all chromosomes in a merged fine-mapping dataset:
+
+```{r iterate-annotations, eval=FALSE}
+merged_DT <- echodata::get_Nalls2019_merged()
+ANNOT_MELT <- IMPACT_iterate_get_annotations(merged_DT = merged_DT)
+```
+
+# Post-processing
+
+`IMPACT_postprocess_annotations()` converts the annotation table to
+long format, identifies the top consensus SNP per locus, and adds a
+combined cell-type label.
+
+```{r postprocess, eval=FALSE}
+ANNOT_MELT <- IMPACT_postprocess_annotations(ANNOT_MELT)
+```
+
+# Enrichment analysis
+
+Enrichment is computed as the ratio of IMPACT signal in a given SNP group
+(e.g. consensus, credible set, lead GWAS) to the proportion of SNPs in
+that group. This tells you whether fine-mapped SNPs are enriched for
+predicted TF binding relative to the background.
+
+```{r enrichment, eval=FALSE}
+## Compute enrichment for a single locus
+enrich <- IMPACT_compute_enrichment(
+    annot_melt = annot_melt,
+    locus = "BST1"
+)
+head(enrich)
+
+## Or iterate across all loci
+ENRICH <- IMPACT_iterate_enrichment(ANNOT_MELT = ANNOT_MELT)
+```
+
+# Visualisation
+
+## SNP group box plot
+
+Compare IMPACT score distributions across SNP groups with
+`IMPACT_snp_group_boxplot()`:
+
+```{r boxplot, eval=FALSE}
+bp <- IMPACT_snp_group_boxplot(
+    TOP_IMPACT_all = TOP_IMPACT_all,
+    snp_groups = c("GWAS lead", "UCS", "Consensus"),
+    method = "wilcox.test"
+)
+```
+
+## Enrichment plots
+
+Visualise enrichment results with bar and violin plots:
+
+```{r enrichment-plot, eval=FALSE}
+plots <- IMPACT_plot_enrichment(ENRICH = ENRICH)
+```
+
+## Locus plot
+
+Create a multi-panel locus plot showing GWAS results, fine-mapping
+posterior probabilities, and per-tissue IMPACT scores:
+
+```{r locus-plot, eval=FALSE}
+impact_plot <- IMPACT_plot_impact_score(annot_melt = annot_melt)
+```
+
+## Heatmap
+
+Generate a ComplexHeatmap of mean IMPACT scores across loci and SNP groups:
+
+```{r heatmap, eval=FALSE}
+mat_meta <- IMPACT_heatmap(ANNOT_MELT = ANNOT_MELT)
+```
+
+
+# Session Info
+
+<details>
+
+```{r Session Info}
+utils::sessionInfo()
+```
+
+</details>
+
+<br>
