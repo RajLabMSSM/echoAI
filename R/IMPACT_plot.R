@@ -182,7 +182,7 @@ IMPACT_plot_enrichment <- function(ENRICH,
                              height = 0) +
         ggplot2::geom_hline(yintercept = 1, linetype = "dashed",
                             alpha = 0.8) +
-        ggplot2::facet_grid(facets = SNP.group ~ .,
+        ggplot2::facet_grid(rows = ggplot2::vars(SNP.group),
                             switch = "y", space = "free_x",
                             scales = "free_x") +
         ggplot2::theme_bw() +
@@ -196,7 +196,7 @@ IMPACT_plot_enrichment <- function(ENRICH,
         ggplot2::geom_col(position = "dodge") +
         ggplot2::geom_hline(yintercept = 1, linetype = "dashed",
                             alpha = 0.8) +
-        ggplot2::facet_grid(facets = . ~ Tissue,
+        ggplot2::facet_grid(cols = ggplot2::vars(Tissue),
                             switch = "y", space = "free_x",
                             scales = "free_x") +
         ggplot2::theme_bw() +
@@ -298,7 +298,7 @@ IMPACT_plot_impact_score <- function(annot_melt,
         subset(annot_melt, IMPACT_score > 0.5),
         ggplot2::aes(x = Mb, y = IMPACT_score, color = TF)) +
         ggplot2::geom_point(show.legend = FALSE) +
-        ggplot2::facet_grid(facets = Tissue ~ ., switch = "y") +
+        ggplot2::facet_grid(rows = ggplot2::vars(Tissue), switch = "y") +
         ggplot2::theme_bw() +
         ggplot2::labs(y = "IMPACT score per tissue") +
         ggplot2::theme(

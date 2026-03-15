@@ -1,15 +1,21 @@
-test_that("IMPACT_query works", {
+test_that("IMPACT_query returns correct dimensions", {
 
-    query_dat <- echodata::BST1[1:50,]
-    annot_dt <- IMPACT_query(query_dat=query_dat,
-                             populations="EUR")
-     testthat::expect_equal(dim(annot_dt),c(13,1419))
+    testthat::skip_if_offline()
+    query_dat <- echodata::BST1[1:50, ]
+    annot_dt <- IMPACT_query(query_dat = query_dat,
+                              populations = "EUR")
+    testthat::expect_true(is.data.frame(annot_dt))
+    testthat::expect_equal(dim(annot_dt), c(13, 1419))
+})
 
-     #### Currently fails
-     ## (need to upgrade echotabix so it handles multiple chroms)
-     # query_dat <- rbind(echodata::BST1[1:50,],
-     #                    echodata::LRRK2[1:50,], fill=TRUE)
-     # annot_dt <- IMPACT_query(query_dat=query_dat,
-     #                          populations="EUR")
-     # testthat::expect_equal(dim(annot_dt),c(13,1419))
+test_that("IMPACT_query long format works", {
+
+    testthat::skip_if_offline()
+    query_dat <- echodata::BST1[1:50, ]
+    annot_dt <- IMPACT_query(query_dat = query_dat,
+                              populations = "EUR",
+                              output_format = "long")
+    testthat::expect_true(is.data.frame(annot_dt))
+    testthat::expect_true("variable" %in% colnames(annot_dt))
+    testthat::expect_true(nrow(annot_dt) > 13)
 })

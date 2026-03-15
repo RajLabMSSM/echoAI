@@ -72,7 +72,10 @@ DEEPLEARNING_plot <- function(
         ## Suppress the side-effect plot device from boxplot()
         outliers <- graphics::boxplot(annot_melt$value,
                                       plot = FALSE)$out
-        annot_melt <- annot_melt[-which(annot_melt$value %in% outliers), ]
+        if (length(outliers) > 0) {
+            idx <- which(annot_melt$value %in% outliers)
+            if (length(idx) > 0) annot_melt <- annot_melt[-idx, ]
+        }
     }
     colorDict <- echodata::snp_group_colorDict()
     dat_plot <- subset(
@@ -84,14 +87,19 @@ DEEPLEARNING_plot <- function(
                                levels = names(colorDict),
                                ordered = TRUE)
         )
-    snp_groups_present <- unique(dat_plot$SNP_group)
-    comparisons <- utils::combn(
-        x = as.character(snp_groups_present),
-        m = 2,
-        FUN = comparisons_filter,
-        simplify = FALSE
-    )
-    comparisons <- Filter(Negate(is.null), comparisons)
+    snp_groups_present <- unique(as.character(
+        dat_plot$SNP_group[!is.na(dat_plot$SNP_group)]))
+    if (length(snp_groups_present) >= 2) {
+        comparisons <- utils::combn(
+            x = snp_groups_present,
+            m = 2,
+            FUN = comparisons_filter,
+            simplify = FALSE
+        )
+        comparisons <- Filter(Negate(is.null), comparisons)
+    } else {
+        comparisons <- list()
+    }
 
     method <- "wilcox.test"
     gp <- ggplot2::ggplot(
@@ -102,7 +110,7 @@ DEEPLEARNING_plot <- function(
         ggplot2::geom_violin(alpha = 0.6) +
         ggplot2::geom_boxplot(alpha = 0.6, color = "black") +
         ggplot2::facet_grid(
-            facets = stats::as.formula(facet_formula),
+            rows = stats::as.formula(facet_formula),
             scales = "free"
         ) +
         ggplot2::labs(

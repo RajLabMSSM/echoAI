@@ -62,6 +62,7 @@ DAT <- SPLICEAI_query_tsv_iterate(
 \seealso{
 Other SPLICEAI: 
 \code{\link{SPLICEAI_plot}()},
+\code{\link{SPLICEAI_query_api}()},
 \code{\link{SPLICEAI_query_tsv}()},
 \code{\link{SPLICEAI_query_vcf}()},
 \code{\link{SPLICEAI_run}()},

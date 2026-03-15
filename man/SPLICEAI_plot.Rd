@@ -31,6 +31,7 @@ plt <- SPLICEAI_plot(dat_merged)
 }
 \seealso{
 Other SPLICEAI: 
+\code{\link{SPLICEAI_query_api}()},
 \code{\link{SPLICEAI_query_tsv}()},
 \code{\link{SPLICEAI_query_tsv_iterate}()},
 \code{\link{SPLICEAI_query_vcf}()},

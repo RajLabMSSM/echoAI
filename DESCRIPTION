@@ -59,7 +59,8 @@ Suggests:
     shades,
     reshape2,
     stringr,
-    R.utils
+    R.utils,
+    jsonlite
 Remotes:
     github::RajLabMSSM/echodata,
     github::RajLabMSSM/echotabix,

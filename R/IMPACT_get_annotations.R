@@ -39,7 +39,7 @@ IMPACT_get_annotations <- function(
     Annot <- IMPACT_score <- POS <- NULL;
 
     if (!is.null(dat)) {
-        dat$CHR <- gsub("chr", "", dat$CHR)
+        dat$CHR <- as.integer(gsub("chr", "", dat$CHR))
         chrom <- dat$CHR[1]
     }
     URL <- file.path(baseURL,
@@ -126,7 +126,7 @@ IMPACT_iterate_get_annotations <- function(
         function(chrom, .merged_DT = merged_DT) {
             messager("+ IMPACT:: Gathering annotations for chrom =",
                      chrom, v = verbose)
-            try({
+            tryCatch({
                 dat <- subset(.merged_DT, CHR == chrom)
                 annot_melt <- IMPACT_get_annotations(
                     baseURL = baseURL,
@@ -153,8 +153,13 @@ IMPACT_iterate_get_annotations <- function(
                          "annotations found at IMPACT_score >=",
                          IMPACT_score_thresh, v = verbose)
                 return(annot_melt)
+            }, error = function(e) {
+                messager("+ IMPACT:: Error for chrom", chrom, ":",
+                         conditionMessage(e), v = verbose)
+                return(NULL)
             })
         })
-    ANNOT_MELT <- data.table::rbindlist(ANNOT_MELT)
+    ANNOT_MELT <- Filter(Negate(is.null), ANNOT_MELT)
+    ANNOT_MELT <- data.table::rbindlist(ANNOT_MELT, fill = TRUE)
     return(ANNOT_MELT)
 }
