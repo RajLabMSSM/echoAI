@@ -65,7 +65,7 @@ download.file(URL, tmp)
 
 Create background with `ggplot2`.
 
-```{r, eval=FALSE}
+```{r}
 set.seed(1234)
 n_bats <- 20
 d <- data.frame(x = -rexp(n_bats, rate = 3),
@@ -74,13 +74,6 @@ d <- data.frame(x = -rexp(n_bats, rate = 3),
   dplyr::mutate(image = URL,
                 bsize = abs(x*y^2)) |>
   dplyr::arrange(dplyr::desc(x), dplyr::desc(y))
-qplot(d$x, d$y, size=d$bsize)
-```
-
-Import data points for reproducibility.
-
-```{r}
-d <- data.table::fread("https://github.com/RajLabMSSM/echoverseTemplate/releases/download/latest/echoverse_points.csv.gz")
 ```
 
 
