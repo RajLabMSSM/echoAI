@@ -40,7 +40,6 @@ Imports:
     methods,
     ggplot2
 Suggests:
-    rworkflows,
     markdown,
     rmarkdown,
     remotes,
