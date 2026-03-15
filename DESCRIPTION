@@ -40,7 +40,6 @@ Imports:
     methods,
     ggplot2
 Suggests:
-    rworkflows,
     markdown,
     rmarkdown,
     remotes,
@@ -61,7 +60,6 @@ Suggests:
     R.utils,
     tidyr
 Remotes:
-    github::neurogenomics/rworkflows,
     github::RajLabMSSM/echodata,
     github::RajLabMSSM/echotabix,
     github::RajLabMSSM/downloadR
