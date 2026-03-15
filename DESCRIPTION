@@ -21,9 +21,9 @@ Authors@R:
            comment = c(ORCID = "0000-0002-9355-5704"))
            )
 Description: Echoverse module: API access to variant-level AI/ML predictions
-    including IMPACT (Inference and Modeling of Phenotype-related ACtive
-    Transcription) for immune cell annotations. Part of the echoverse suite
-    for genomic fine-mapping.
+    including IMPACT (immune cell TF binding), SpliceAI (splice site
+    predictions), and deep learning annotations (Basenji, DeepSEA).
+    Part of the echoverse suite for genomic fine-mapping.
 URL: https://github.com/RajLabMSSM/echoAI
 BugReports: https://github.com/RajLabMSSM/echoAI/issues
 Encoding: UTF-8
@@ -38,6 +38,8 @@ Imports:
     stats,
     utils,
     methods,
+    parallel,
+    tidyr,
     ggplot2
 Suggests:
     markdown,
@@ -57,8 +59,7 @@ Suggests:
     shades,
     reshape2,
     stringr,
-    R.utils,
-    tidyr
+    R.utils
 Remotes:
     github::RajLabMSSM/echodata,
     github::RajLabMSSM/echotabix,
