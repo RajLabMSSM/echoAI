@@ -1,6 +1,6 @@
 ---
 title: ""
-author: "`r rworkflows::use_badges(add_doi = '10.1093/bioinformatics/btab658')`"
+author: "`r rworkflows::use_badges(branch = 'main', add_doi = '10.1093/bioinformatics/btab658')`"
 output:
   github_document
 ---

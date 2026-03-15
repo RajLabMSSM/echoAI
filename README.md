@@ -1,14 +1,15 @@
-NULL [![License:
+<img src='https://github.com/RajLabMSSM/echoAI/raw/main/inst/hex/hex.png' title='Hex sticker for echoAI' height='300'><br>
+[![License:
 GPL-3](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://cran.r-project.org/web/licenses/GPL-3)
 [![](https://img.shields.io/badge/doi-10.1093/bioinformatics/btab658-blue.svg)](https://doi.org/10.1093/bioinformatics/btab658)
 [![](https://img.shields.io/badge/devel%20version-0.99.0-black.svg)](https://github.com/RajLabMSSM/echoAI)
 [![](https://img.shields.io/github/languages/code-size/RajLabMSSM/echoAI.svg)](https://github.com/RajLabMSSM/echoAI)
-[![](https://img.shields.io/github/last-commit/RajLabMSSM/echoAI.svg)](https://github.com/RajLabMSSM/echoAI/commits/master)
+[![](https://img.shields.io/github/last-commit/RajLabMSSM/echoAI.svg)](https://github.com/RajLabMSSM/echoAI/commits/main)
 <br> [![R build
 status](https://github.com/RajLabMSSM/echoAI/workflows/rworkflows/badge.svg)](https://github.com/RajLabMSSM/echoAI/actions)
-[![](https://codecov.io/gh/RajLabMSSM/echoAI/branch/master/graph/badge.svg)](https://app.codecov.io/gh/RajLabMSSM/echoAI)
+[![](https://codecov.io/gh/RajLabMSSM/echoAI/branch/main/graph/badge.svg)](https://app.codecov.io/gh/RajLabMSSM/echoAI)
 <br>
-<a href='https://app.codecov.io/gh/RajLabMSSM/echoAI/tree/master' target='_blank'><img src='https://codecov.io/gh/RajLabMSSM/echoAI/branch/master/graphs/icicle.svg' title='Codecov icicle graph' width='200' height='50' style='vertical-align: top;'></a>  
+<a href='https://app.codecov.io/gh/RajLabMSSM/echoAI/tree/main' target='_blank'><img src='https://codecov.io/gh/RajLabMSSM/echoAI/branch/main/graphs/icicle.svg' title='Codecov icicle graph' width='200' height='50' style='vertical-align: top;'></a>  
 <h4>  
 Authors: <i>Brian Schilder, Jack Humphrey, Towfique Raj</i>  
 </h4>
