@@ -5,6 +5,11 @@
 <url><loc>/articles/index.html</loc></url>
 <url><loc>/authors.html</loc></url>
 <url><loc>/index.html</loc></url>
+<url><loc>/reference/DEEPLEARNING_melt.html</loc></url>
+<url><loc>/reference/DEEPLEARNING_plot.html</loc></url>
+<url><loc>/reference/DEEPLEARNING_query.html</loc></url>
+<url><loc>/reference/DEEPLEARNING_query_multi_chr.html</loc></url>
+<url><loc>/reference/DEEPLEARNING_query_one_chr.html</loc></url>
 <url><loc>/reference/IMPACT_compute_enrichment.html</loc></url>
 <url><loc>/reference/IMPACT_files.html</loc></url>
 <url><loc>/reference/IMPACT_get_annotation_key.html</loc></url>
@@ -20,6 +25,12 @@
 <url><loc>/reference/IMPACT_process.html</loc></url>
 <url><loc>/reference/IMPACT_query.html</loc></url>
 <url><loc>/reference/IMPACT_snp_group_boxplot.html</loc></url>
+<url><loc>/reference/SPLICEAI_plot.html</loc></url>
+<url><loc>/reference/SPLICEAI_query_tsv.html</loc></url>
+<url><loc>/reference/SPLICEAI_query_tsv_iterate.html</loc></url>
+<url><loc>/reference/SPLICEAI_query_vcf.html</loc></url>
+<url><loc>/reference/SPLICEAI_run.html</loc></url>
+<url><loc>/reference/SPLICEAI_snp_probs.html</loc></url>
 <url><loc>/reference/hierarchical_colors.html</loc></url>
 <url><loc>/reference/index.html</loc></url>
 <url><loc>/reference/message_parallel.html</loc></url>
