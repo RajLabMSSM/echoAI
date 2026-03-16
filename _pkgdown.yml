@@ -125,3 +125,7 @@ reference:
       - DEEPLEARNING_query_one_chr
       - DEEPLEARNING_melt
       - DEEPLEARNING_plot
+
+  - title: Bundled data
+    contents:
+      - IMPACT_files
