@@ -16,26 +16,43 @@ vignette: >
 library(echoAI)
 ```
 
+```{r, echo=FALSE}
+## Several examples query remote Zenodo/GitHub resources.
+## Gate on internet access so R CMD check works offline.
+has_internet <- function() {
+    z <- try(suppressWarnings(
+        readLines("https://github.com", n = 1L, warn = FALSE)
+    ), silent = TRUE)
+    !inherits(z, "try-error")
+}
+run_online <- has_internet()
+```
+
 # Introduction
 
 `echoAI` provides API access to variant-level AI/ML predictions,
-currently centred on
-[IMPACT](https://github.com/immunogenomics/IMPACT)
-(Inference and Modeling of Phenotype-related ACtive Transcription).
+currently centred on three tools:
 
-IMPACT predicts transcription factor (TF) binding at a motif site by
-learning the epigenomic profiles at those sites
-(primarily [ENCODE](https://www.encodeproject.org/)).
-The 707 annotations cover a wide range of immune and non-immune cell types,
-making IMPACT scores especially useful for prioritising causal variants
-in immune-mediated diseases.
+- **IMPACT** (Inference and Modeling of Phenotype-related ACtive Transcription)
+  -- predicts transcription factor (TF) binding at motif sites by learning
+  epigenomic profiles, primarily from [ENCODE](https://www.encodeproject.org/).
+  The 707 annotations cover a wide range of immune and non-immune cell types,
+  making IMPACT scores especially useful for prioritising causal variants in
+  immune-mediated diseases. All IMPACT data are aligned to **hg19**.
+  Tabix-indexed versions are hosted on Zenodo
+  ([doi:10.5281/zenodo.7062238](https://doi.org/10.5281/zenodo.7062238))
+  for rapid remote querying.
 
-All IMPACT data are aligned to the **hg19** genome build.
-Tabix-indexed versions are hosted on Zenodo
-([doi:10.5281/zenodo.7062238](https://doi.org/10.5281/zenodo.7062238))
-for rapid remote querying.
+- **SpliceAI** -- predicts the probability that a variant alters mRNA splicing.
+  Results can be obtained via a local VCF/TSV or the Broad Institute API.
 
-# Query IMPACT annotations
+- **Deep learning annotations** (Basenji, DeepSEA) -- query precomputed
+  variant-level scores from deep learning models of chromatin accessibility
+  and gene expression.
+
+# IMPACT
+
+## Query IMPACT annotations
 
 The primary entry point is `IMPACT_query()`, which queries tabix-indexed
 IMPACT annotation and LD-score files hosted on Zenodo.
@@ -70,7 +87,7 @@ annot_long <- IMPACT_query(
 head(annot_long)
 ```
 
-# Annotation key
+## Annotation key
 
 The annotation key maps each of the 707 IMPACT annotation IDs to its
 source study, tissue, cell type/line, and transcription factor.
@@ -80,7 +97,7 @@ annot_key <- IMPACT_get_annotation_key(save_key = FALSE)
 head(annot_key)
 ```
 
-# Download full annotation matrices
+## Download full annotation matrices
 
 For larger analyses (e.g. genome-wide or multi-locus), you can download
 the full per-chromosome annotation matrices directly from the IMPACT
@@ -103,7 +120,7 @@ merged_DT <- echodata::get_Nalls2019_merged()
 ANNOT_MELT <- IMPACT_iterate_get_annotations(merged_DT = merged_DT)
 ```
 
-# Post-processing
+## Post-processing
 
 `IMPACT_postprocess_annotations()` converts the annotation table to
 long format, identifies the top consensus SNP per locus, and adds a
@@ -113,7 +130,7 @@ combined cell-type label.
 ANNOT_MELT <- IMPACT_postprocess_annotations(ANNOT_MELT)
 ```
 
-# Enrichment analysis
+## Enrichment analysis
 
 Enrichment is computed as the ratio of IMPACT signal in a given SNP group
 (e.g. consensus, credible set, lead GWAS) to the proportion of SNPs in
@@ -132,9 +149,9 @@ head(enrich)
 ENRICH <- IMPACT_iterate_enrichment(ANNOT_MELT = ANNOT_MELT)
 ```
 
-# Visualisation
+## Visualisation
 
-## SNP group box plot
+### SNP group box plot
 
 Compare IMPACT score distributions across SNP groups with
 `IMPACT_snp_group_boxplot()`:
@@ -147,7 +164,7 @@ bp <- IMPACT_snp_group_boxplot(
 )
 ```
 
-## Enrichment plots
+### Enrichment plots
 
 Visualise enrichment results with bar and violin plots:
 
@@ -155,7 +172,7 @@ Visualise enrichment results with bar and violin plots:
 plots <- IMPACT_plot_enrichment(ENRICH = ENRICH)
 ```
 
-## Locus plot
+### Locus plot
 
 Create a multi-panel locus plot showing GWAS results, fine-mapping
 posterior probabilities, and per-tissue IMPACT scores:
@@ -164,12 +181,48 @@ posterior probabilities, and per-tissue IMPACT scores:
 impact_plot <- IMPACT_plot_impact_score(annot_melt = annot_melt)
 ```
 
-## Heatmap
+### Heatmap
 
 Generate a ComplexHeatmap of mean IMPACT scores across loci and SNP groups:
 
 ```{r heatmap, eval=FALSE}
 mat_meta <- IMPACT_heatmap(ANNOT_MELT = ANNOT_MELT)
+```
+
+# SpliceAI
+
+## Run SpliceAI
+
+`SPLICEAI_run()` is the main entry point. It dispatches to the
+appropriate backend (API, local TSV, or VCF) depending on your input.
+
+```{r spliceai-run, eval=FALSE}
+query_dat <- echodata::BST1[1:50,]
+res <- SPLICEAI_run(query_dat = query_dat)
+```
+
+## Visualise splice probabilities
+
+```{r spliceai-plot, eval=FALSE}
+plt <- SPLICEAI_plot(query_dat = res)
+```
+
+# Deep learning annotations
+
+## Query deep learning scores
+
+`DEEPLEARNING_query()` retrieves precomputed variant-level scores from
+deep learning models (e.g. Basenji, DeepSEA) via tabix-indexed files.
+
+```{r dl-query, eval=FALSE}
+query_dat <- echodata::BST1[1:50,]
+dl_res <- DEEPLEARNING_query(query_dat = query_dat)
+```
+
+## Visualise scores
+
+```{r dl-plot, eval=FALSE}
+plt <- DEEPLEARNING_plot(dl_res)
 ```
 
 
